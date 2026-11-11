@@ -1,0 +1,5 @@
+numpy
+opencv-python
+openvino
+mss ; skipped automatically on Wayland+grim
+huggingface_hub
