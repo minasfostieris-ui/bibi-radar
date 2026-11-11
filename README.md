@@ -8,6 +8,12 @@ The detector is a small YOLO11n (5 MB) trained on publicly available photos
 and campaign footage of a world leader, with two guard classes (`female`,
 `other_male`) so it circles *him* and mostly nobody else.
 
+## Demo
+
+The 2015 Likud "Meet the Bibi Sitter" sketch, circled end to end:
+**https://www.youtube.com/watch?v=P4jeMWcLuZ0**
+(self-hosted copy: https://huggingface.co/spaces/minas2025/bibi-radar-demo)
+
 ## One command
 
 ```bash
