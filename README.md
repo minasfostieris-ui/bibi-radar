@@ -31,6 +31,25 @@ That's it. First launch:
 Tuning: `python bibi_radar.py --conf 0.5` (default 0.45 — raise if it boxes
 lookalikes, lower if it misses smiling young Bibi).
 
+## GPU (AMD ROCm)
+
+`--backend auto` (the default) uses the GPU when a HIP/CUDA torch device is
+visible, otherwise it falls back to OpenVINO CPU. Force either with
+`--backend gpu` / `--backend cpu`.
+
+On RDNA2 cards (RX 6700 XT etc.) the app applies the `gfx1030` disguise
+(`HSA_OVERRIDE_GFX_VERSION=10.3.0`) automatically. You need a ROCm torch build
+plus `ultralytics`; the easiest path is a dedicated venv:
+
+```bash
+python -m venv ~/.venvs/rocm
+~/.venvs/rocm/bin/pip install torch torchvision --index-url https://download.pytorch.org/whl/rocm7.2
+~/.venvs/rocm/bin/python bibi_radar.py --backend gpu
+```
+
+The GPU path runs fp16 at 960px with a threaded latest-frame capture, so
+inference overlaps screen capture instead of waiting on it.
+
 ## Platforms
 
 | OS | Status |
@@ -58,10 +77,11 @@ the one-time model download.
 
 ## How it works
 
-Letterboxed 960px frame → OpenVINO CPU (≈12–35 ms/frame on a normal desktop)
-→ per-anchor 3-channel argmax (the bibi score must *outvote* both guard
-classes) → greedy NMS → circles. Model card and training notes live in the
-HF repo.
+Letterboxed 960px frame → OpenVINO CPU (≈12–35 ms/frame) **or** torch-HIP GPU
+(fp16, a few ms/frame on RDNA2) → per-anchor 3-channel argmax on CPU / built-in
+argmax on GPU (the bibi score must *outvote* both guard classes) → greedy NMS →
+circles. A threaded latest-frame queue overlaps capture with inference on both
+backends. Model card and training notes live in the HF repo.
 
 ## License
 

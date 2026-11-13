@@ -1,5 +1,10 @@
+# CPU backend (default / fallback)
 numpy
 opencv-python
 openvino
-mss ; skipped automatically on Wayland+grim
 huggingface_hub
+mss  # auto-skipped on Wayland+grim
+
+# GPU backend (optional, AMD ROCm): install a ROCm torch build + ultralytics
+# in a venv (e.g. ~/.venvs/rocm), then: python bibi_radar.py --backend gpu
+# ultralytics
